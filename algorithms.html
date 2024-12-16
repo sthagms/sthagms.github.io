@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="nosnippet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #111111;
+            color: #fff;
+        }
+        .sidebar {
+            background-color: #011D39;
+            padding: 20px;
+            height: 100vh;
+        }
+        .sidebar a {
+            color: #fff;
+            display: block;
+            padding: 10px 0;
+            border-bottom: 1px solid #fff;
+        }
+        .sidebar a:last-child {
+            border-bottom: none;
+        }
+
+        .sidebar a:hover {
+            background-color: #454d55;
+        }
+        .nav-link {
+            padding-left: 10px;
+        }
+        .sidebar .nav-link.active {
+            background-color: #024d97;
+            color: #fff;
+        }
+        .sidebar-icons {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        .blog-header {
+            text-align: center;
+            padding: 20px;
+            background-color: #343a40;
+        }
+        .blog-header h1 {
+            color: #fff;
+        }
+        .card {
+            background-color: #454d55;
+            color: #fff;
+            margin-top: 20px;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #343a40;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .footer p {
+            margin: 0;
+        }
+        .mcard {
+            background-color: #222222;
+            padding: 10px;
+            bottom: 0;
+            width: 100%;
+            border-radius: 15px;
+            margin-bottom: 10px;
+        }
+        #sidebar {
+          padding-left: 0;
+          padding-right: 0;
+          margin-left:0;
+          margin-right:0;
+          padding-top:0;
+        }
+        a {
+            padding-left: 10px;
+        }
+        .mypicclass {
+            width: 60%;
+            max-width: 800px
+        }
+        .mypicclasssmall {
+            width: 30%;
+            max-width: 500px
+        }
+    </style>
+    <title>Avalon Algorithms</title>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block sidebar" id="sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li>
+                        <img src="images/vertical_capsule.png" class="img-fluid w-100">
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://acetes.github.io/avalon.html" style="padding-left: 10px;">
+                            <b>Home</b>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://acetes.github.io/avalontutorial.html" style="padding-left: 10px;">
+                            <b>Tutorial</b>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://acetes.github.io/mapmaker.html" style="padding-left: 10px;">
+                            <b>Map Maker Guide</b>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://acetes.github.io/avalondevelopment.html" style="padding-left: 10px;">
+                            <b>Development</b>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://acetes.github.io/avalonsupport.html" style="padding-left: 10px;">
+                            <b>Support</b>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" id="mainContent">
+
+<h1>Strategy Game Algorithms in Avalon</h1>
+
+
+<div class="mcard">
+<h3>Graphics</h3>
+<p>In most strategy games, we start first with a mathematical graph with Nodes and Edges. To display the territory (nodes) we control, we want to give each node a "border" that we can color in. We will build procedural border meshes using a <i>Delaunay Triangulation</i>, from which we get a <i>Voronoi Diagram</i>. We do this using the Bowyer-Watson algorithm which is \(O(n^2)\), but can be \(O(n \log n)\) in amortized complexity</p>
+
+<img class="mypicclass" src="./images/algorithm_bowyer.png">
+
+<p>The Voronoi Diagram consists of convex polygons such that the edges are equally distant from the two nodes they neighbor.</p>
+
+<img class="mypicclasssmall" src="./images/algorithm_voronoi1.png">
+
+<p>Since each Voronoi cell is convex, we can sort the vertices by their interior angle, and triangulate it just by walking around it and building triangles along the way.</p>
+
+<img class="mypicclasssmall" src="./images/algorithm_voronoi0.png">
+
+<p>So for each government, we can color in the voronoi cells of the nodes they control. This gives us something like this:</p>
+
+<img class="mypicclass" src="./images/algorithm_border.png">
+
+<p>But in addition to this, we need to create a border outline over each connected component of the map to show the shapes more clearly</p>
+
+<img class="mypicclass" src="./images/algorithm_outline0.png">
+
+<p>So we split each government's territory into connected components, then remove the inner edges of the resulting polygon.</p>
+
+<img class="mypicclass" src="./images/algorithm_outline.png">
+
+<p>We move across the resulting polygon, building a procedural mesh along the way by making rectangles which are parallel to the lines but face inwards. We sometimes also need to add triangles inside to make the mesh smooth when the internal angles are high (pictured)</p>
+
+<img class="mypicclass" src="./images/algorithm_outline2.png">
+<br>
+
+</div>
+
+<div class="mcard">
+<h3>Making AI think Strategically</h3>
+<p>The AI in a strategy game needs to coordinate all of its fleets, resources, and planets to work together to achieve diplomatic and military objectives collectively. We can do this by creating a bunch of low-level state machine AIs which handle the individual tasks that the AI needs to interact with, and having these machines work mostly independently, but sharing enough state to not conflict in their tasks with each other.</p>
+
+<p>For example, one AI will handle the budget, one AI will handle recruiting and disbanding ships so they approximately match military budget goals set previously. One AI will handle the non-major fleets which are to be merged into the major ones, and the major fleets will act more or less independently, except for knowing the other fleets' objectives so that multiple fleets wont have the same task (capturing territory, attacking an enemy fleet, defending friendly territory, recapturing territory, running away, repairing).</p>
+<img class="mypicclass" src="./images/algorithm_ai.png">
+
+<p>The AIs can be updated in a stochastic manner, with each function having a parameter of "time Passed". So if one government isn't at war, we might refresh it only every 100 turns with "timePassed=100", and if one government is at war with the player, we might refresh it every 10 turns since it's more important for it to function well, and it justifies using more computational resources. The timePassed parameter will scale the odds of things happening (like searching for an alliance), so behavior is approximately the same. What's more, we can scale the AI's "intelligence" by picking between the optimal solution and a "naive" solution to a given problem; we always pick the optimal solution when intelligence=1, and pick the naive solution half of the time when intelligence=0.5.</p>
+</div>
+
+<div class="mcard">
+<h3>Territory-Changing Algorithms</h3>
+<p>One aspect of strategy games is how to get the AI to decide where and how it wants to expand its territory. For example, let's take the classic game of Risk where you attack only adjacent provinces with your armies</p>
+<img class="mypicclass" src="./images/algorithm_risk.png">
+<p>Beyond just expanding, you should maximize your territory's outward-facing edges while minimizing the number of nodes on your borders, because if you have a province that can attack three other provinces, then your opponent must defend three times more territory than you need to. This is in some sense the two-dimensional analogue of biological organisms maximizing their surface-area-to-volume ratio in order to consume more food with the smallest upkeep.</p>
+
+<p>One problem which should be minimized is the creation of "border gore", where territories are split into many different connected subgraphs, making the display more confusing for the viewer.</p>
+<img class="mypicclasssmall" src="./images/algorithm_bordergore.jpg">
+<p>So when we determine how country A should take territory from country B, we are engaging in an optimization problem:</p>
+<ol>
+    <li>country A receieves approximately the amount of territory as how much it won the war (\(0 \leq p \leq 1\))</li>
+    <li>country A doesn't split up its own territory</li>
+    <li>country A doesn't split up country B's territory unless it needs to (to achieve the first objective)</li>
+    <li>country A doesn't make its territory too elongated</li>
+</ol>
+<img class="mypicclass" src="./images/algorithm_bordergore2.png">
+
+<p>We can do this by stochastically building (with some heuristics) \(K\) different configurations of nodes to take until we reach the proportion of territory to take \(p\). Then we look for the best configuration to maximize the territory taken given that it satisfies the other requirements (minimize number of pieces country B is split into). We can choose \(K\) to be higher to increase the quality, and lower to increase performance based on testing.</p>
+
+</div>
+
+<div class="mcard">
+<h3>Title-Placing</h3>
+<p>Another problem is placing names over territory. In the case of a simple convex piecewise linear polygon, placing a title (which fits inside an inscribed rectangle) on the shape is relatively simple. However, since the territory in the game is a union of arbitrary polygons, it is not necessarily convex or even connected as a shape.</p>
+<img class="mypicclass" src="./images/algorithm_rectangle.jpg">
+<p>First, we split the territory into its components (connected subgraphs), then for each component (or just the biggest one) we will try to place an inscribed title over it.</p>
+<br>
+<p><a href="https://www.sciencedirect.com/science/article/abs/pii/S0925772120301048">In the general case</a> this is called the "maximum area inscribed rectangle". The general case is \(O(n^3)\) where \(n\) is the number of vertices of the polygon. However, in our case, we need only a "fuzzy" solution that can overlap outside of the polygon some, as long as it fulfills some other optimization requirements.</p>
+<br>
+<p>We want to maximize the title's size (up to a limit) while optimizing a number of requirements at the same time:</p>
+<ol>
+    <li>it shouldn't overlap other country's territories too much</li>
+    <li>it shouldn't overlap other country's titles too much</li>
+    <li>it shouldn't be too large or too small</li>
+    <li>it shouldn't overlap into "holes" in a country's territory</li>
+    <li>it shouldn't overlap into empty space too much</li>
+    <li>and it should be the right height to width ratio for the text being displayed</li>
+    <li>this algorithm should be able to be run on each government with 500-2000 nodes in less than ~5ms on an average computer</li>
+</ol>
+<p>For example, in the below map, red has a hole in its territory where a different government controls territory, so it shouldn't overlap there.</p>
+<img class="mypicclass" src="./images/algorithm_rect1.png">
+<p>To do this, we can do an iterative method starting from a bounding box of every connected component of the territory, and iteratively make the title's box smaller using three different "moves": We can "push inwards" to make the box smaller, split the box in half and pick the best half, and translate the box. We use these moves until we locally maximize the fulfillment of the objectives, quitting if there is no apparent way to reach a valid solution.</p>
+
+<p>We can partition the nodes into squares to precompute how many nodes are in each region, and how many belong to each government, then scale the size of the boxes based on empirical performance. This is analogous to spatial partitioning algorithms for collision detection.</p>
+</div>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+</body>
+</html>
