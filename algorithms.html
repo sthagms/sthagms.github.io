@@ -97,9 +97,12 @@
 
 <div class="container-fluid">
     <div class="row">
-        <nav class="col-md-2 d-none d-md-block sidebar" id="sidebar">
+        <nav class="col-md-2 d-none d-md-block sidebar" style="max-width: 15%" id="sidebar">
             <div class="sidebar-sticky">
                 <ul class="nav flex-column">
+                    <li>
+                        <img src="images/vertical_capsule.png" class="img-fluid w-100">
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="https://acetes.github.io/avalon.html" style="padding-left: 10px;">
                             <b>Home</b>
@@ -134,6 +137,19 @@
 
 <h1>Strategy Game Algorithms in Avalon</h1>
 
+<div class="mcard">
+Strategy games typically require the use of lots of interesting algorithms, because they involve large numbers of processes which all affect each other in emergent ways.
+</div>
+
+<div class="mcard">
+<h3>Making AI think Strategically</h3>
+<p>The AI in a strategy game needs to coordinate all of its fleets, resources, and planets to work together to achieve diplomatic and military objectives collectively. We can do this by creating a bunch of low-level state machine AIs which handle the individual tasks that the AI needs to interact with, and having these machines work mostly independently, but sharing enough state to not conflict in their tasks with each other.</p>
+
+<p>For example, one AI will handle the budget, one AI will handle recruiting and disbanding ships so they approximately match military budget goals set previously. One AI will handle the non-major fleets which are to be merged into the major ones, and the major fleets will act more or less independently, except for knowing the other fleets' objectives so that multiple fleets wont have the same task (capturing territory, attacking an enemy fleet, defending friendly territory, recapturing territory, running away, repairing).</p>
+<img class="mypicclass" src="./images/algorithm_ai.png">
+
+<p>The AIs can be updated in a stochastic manner, with each function having a parameter of "time Passed". So if one government isn't at war, we might refresh it only every 100 turns with "timePassed=100", and if one government is at war with the player, we might refresh it every 10 turns since it's more important for it to function well, and it justifies using more computational resources. The timePassed parameter will scale the odds of things happening (like searching for an alliance), so behavior is approximately the same. What's more, we can scale the AI's "intelligence" by picking between the optimal solution and a "naive" solution to a given problem; we always pick the optimal solution when intelligence=1, and pick the naive solution half of the time when intelligence=0.5.</p>
+</div>
 
 <div class="mcard">
 <h3>Graphics</h3>
@@ -166,16 +182,6 @@
 <img class="mypicclass" src="./images/algorithm_outline2.png">
 <br>
 
-</div>
-
-<div class="mcard">
-<h3>Making AI think Strategically</h3>
-<p>The AI in a strategy game needs to coordinate all of its fleets, resources, and planets to work together to achieve diplomatic and military objectives collectively. We can do this by creating a bunch of low-level state machine AIs which handle the individual tasks that the AI needs to interact with, and having these machines work mostly independently, but sharing enough state to not conflict in their tasks with each other.</p>
-
-<p>For example, one AI will handle the budget, one AI will handle recruiting and disbanding ships so they approximately match military budget goals set previously. One AI will handle the non-major fleets which are to be merged into the major ones, and the major fleets will act more or less independently, except for knowing the other fleets' objectives so that multiple fleets wont have the same task (capturing territory, attacking an enemy fleet, defending friendly territory, recapturing territory, running away, repairing).</p>
-<img class="mypicclass" src="./images/algorithm_ai.png">
-
-<p>The AIs can be updated in a stochastic manner, with each function having a parameter of "time Passed". So if one government isn't at war, we might refresh it only every 100 turns with "timePassed=100", and if one government is at war with the player, we might refresh it every 10 turns since it's more important for it to function well, and it justifies using more computational resources. The timePassed parameter will scale the odds of things happening (like searching for an alliance), so behavior is approximately the same. What's more, we can scale the AI's "intelligence" by picking between the optimal solution and a "naive" solution to a given problem; we always pick the optimal solution when intelligence=1, and pick the naive solution half of the time when intelligence=0.5.</p>
 </div>
 
 <div class="mcard">
